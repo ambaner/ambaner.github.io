@@ -11,11 +11,13 @@
         .hero { background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); color: white; padding: 4rem 2rem 3rem; text-align: center; }
         .hero h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 0.5rem; }
         .hero p { font-size: 1.1rem; opacity: 0.8; max-width: 500px; margin: 0 auto; }
-        .container { max-width: 900px; margin: 0 auto; padding: 3rem 1.5rem; }
-        .projects { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 2rem; }
+        .container { max-width: 1000px; margin: 0 auto; padding: 3rem 1.5rem; }
+        .projects { display: grid; grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); gap: 2rem; }
         .project-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; transition: transform 0.2s, box-shadow 0.2s; text-decoration: none; color: inherit; display: block; }
-        .project-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.08); }
-        .project-header { padding: 2rem 2rem 1.5rem; }
+        .project-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.1); }
+        .project-preview { width: 100%; aspect-ratio: 16/10; overflow: hidden; background: #0f172a; display: flex; align-items: center; justify-content: center; }
+        .project-preview img { width: 100%; height: 100%; object-fit: cover; }
+        .project-header { padding: 1.5rem 2rem 1rem; }
         .project-header h2 { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.5rem; }
         .project-header p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.5; }
         .project-tags { padding: 0 2rem 1.5rem; display: flex; gap: 0.5rem; flex-wrap: wrap; }
@@ -27,7 +29,8 @@
         .parcour-gradient { border-top: 4px solid; border-image: linear-gradient(90deg, #1a0a2e, #e74c3c) 1; }
         footer { text-align: center; padding: 2rem; color: var(--text-muted); font-size: 0.85rem; }
         footer a { color: var(--accent); text-decoration: none; }
-        @media (max-width: 640px) { .projects { grid-template-columns: 1fr; } .hero h1 { font-size: 2rem; } }
+        @media (max-width: 900px) { .projects { grid-template-columns: 1fr; } }
+        @media (max-width: 640px) { .hero h1 { font-size: 2rem; } }
     </style>
 </head>
 <body>
@@ -38,6 +41,9 @@
     <div class="container">
         <div class="projects">
             <a class="project-card mnos-gradient" href="https://ambaner.github.io/mnos16/">
+                <div class="project-preview">
+                    <img src="https://raw.githubusercontent.com/ambaner/mnos16/main/doc/booted.gif" alt="MNOS16 booting in Hyper-V">
+                </div>
                 <div class="project-header">
                     <h2>MNOS16</h2>
                     <p>A minimalistic 16 bit operating system built from scratch in x86 Assembly. Features a custom filesystem, memory manager, program loader, and monitor.</p>
@@ -50,11 +56,14 @@
                     <span class="tag">Protected Mode</span>
                 </div>
                 <div class="project-footer">
-                    <span class="version">v0.9.12</span>
+                    <span class="version">v0.9.13</span>
                     <span class="arrow">&#x2192;</span>
                 </div>
             </a>
             <a class="project-card parcour-gradient" href="https://ambaner.github.io/parcour/">
+                <div class="project-preview">
+                    <img src="https://raw.githubusercontent.com/ambaner/parcour/main/doc/gameplay.gif" alt="Parcour gameplay demo">
+                </div>
                 <div class="project-header">
                     <h2>Parcour</h2>
                     <p>A Prince of Persia-inspired 2D platformer built in pure C/Win32. No frameworks, no dependencies &#x2014; just raw Win32 API and a passion for retro gaming.</p>
