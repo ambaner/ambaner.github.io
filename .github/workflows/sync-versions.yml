@@ -1,0 +1,63 @@
+name: Sync Project Versions
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'  # every 6 hours
+  workflow_dispatch:        # manual trigger
+
+permissions:
+  contents: write
+
+jobs:
+  sync-versions:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Fetch latest releases and update index.html
+        run: |
+          MNOS_TAG=$(gh api repos/ambaner/mnos16/releases/latest --jq '.tag_name')
+          MNOS_ASSET=$(gh api repos/ambaner/mnos16/releases/latest --jq '.assets[0].name')
+          PARCOUR_TAG=$(gh api repos/ambaner/parcour/releases/latest --jq '.tag_name')
+
+          echo "MNOS16: $MNOS_TAG ($MNOS_ASSET)"
+          echo "Parcour: $PARCOUR_TAG"
+
+          # Update MNOS16 version
+          sed -i -E "s/(MNOS16<\/h2>.*<span class=\"version\">)v[0-9]+\.[0-9]+\.[0-9]+/\1$MNOS_TAG/" index.html
+          # Simpler: just update the version spans by context
+          # The MNOS16 card version comes first, Parcour second
+          python3 -c "
+import re
+
+with open('index.html', 'r') as f:
+    html = f.read()
+
+# Split at the two version spans and update them
+parts = html.split('<span class=\"version\">')
+if len(parts) >= 3:
+    # First version span is MNOS16
+    parts[1] = re.sub(r'v[\d.]+', '${MNOS_TAG}', parts[1], count=1)
+    # Second version span is Parcour
+    parts[2] = re.sub(r'v[\d.]+', '${PARCOUR_TAG}', parts[2], count=1)
+    html = '<span class=\"version\">'.join(parts)
+
+with open('index.html', 'w') as f:
+    f.write(html)
+"
+        env:
+          GH_TOKEN: ${{ github.token }}
+
+      - name: Commit and push
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet && echo "No changes" && exit 0
+          MNOS_TAG=$(gh api repos/ambaner/mnos16/releases/latest --jq '.tag_name')
+          PARCOUR_TAG=$(gh api repos/ambaner/parcour/releases/latest --jq '.tag_name')
+          git commit -m "Sync versions: MNOS16 $MNOS_TAG, Parcour $PARCOUR_TAG"
+          git push
+        env:
+          GH_TOKEN: ${{ github.token }}
